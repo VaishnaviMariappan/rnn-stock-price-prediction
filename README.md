@@ -28,7 +28,7 @@ To develop a Recurrent Neural Network model for stock price prediction.
 
 ## PROGRAM
 
-python
+```python
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -39,25 +39,15 @@ from keras.models import Sequential
 
 ### Read Train Data & Normalize:
 
-python
-
 dataset_train = pd.read_csv('trainset.csv')
-
 dataset_train.columns
-
 dataset_train.head()
-
 train_set = dataset_train.iloc[:,1:2].values
-
 type(train_set)
-
 train_set.shape
-
 sc = MinMaxScaler(feature_range=(0,1))
 training_set_scaled = sc.fit_transform(train_set)
-
 training_set_scaled.shape
-
 X_train_array = []
 y_train_array = []
 for i in range(60, 1259):
@@ -65,34 +55,22 @@ for i in range(60, 1259):
   y_train_array.append(training_set_scaled[i,0])
 X_train, y_train = np.array(X_train_array), np.array(y_train_array)
 X_train1 = X_train.reshape((X_train.shape[0], X_train.shape[1],1))
-
 X_train.shape
-
 length = 60
 n_features = 1
 
 ### Build & Train Model:
 
-python
 model = Sequential([layers.SimpleRNN(50,input_shape=(60,1)),
                     layers.Dense(1)])
-
 model.compile(optimizer='adam',loss='mse')
 model.summary()
-
 model.fit(X_train1,y_train,epochs=20, batch_size=32)
-
 ### Read Test Data & Normalize:
-
-python
 dataset_test = pd.read_csv('testset.csv')
-
 test_set = dataset_test.iloc[:,1:2].values
-
 test_set.shape
-
 dataset_total = pd.concat((dataset_train['Open'],dataset_test['Open']),axis=0)
-
 inputs = dataset_total.values
 inputs = inputs.reshape(-1,1)
 inputs_scaled=sc.transform(inputs)
@@ -103,13 +81,9 @@ for i in range(60,1384):
   y_test.append(inputs_scaled[i,0])
 X_test = np.array(X_test)
 X_test = np.reshape(X_test,(X_test.shape[0], X_test.shape[1],1))
-
 X_test.shape
 
-
 ### Predict Values & Plot:
-
-python
 
 predicted_stock_price_scaled = model.predict(X_test)
 predicted_stock_price = sc.inverse_transform(predicted_stock_price_scaled)
@@ -123,13 +97,11 @@ plt.ylabel('Google Stock Price')
 plt.legend()
 plt.show()
 
-
 ### Check MSE Score:
-python
+
 from sklearn.metrics import mean_squared_error as mse
 mse(y_test,predicted_stock_price)
-
-
+```
 ## OUTPUT
 
 ### True Stock Price, Predicted Stock Price vs time
@@ -140,7 +112,6 @@ mse(y_test,predicted_stock_price)
 ### Mean Square Error
 
 <img width="487" alt="image" src="https://github.com/Monisha-11/rnn-stock-price-prediction/assets/93427240/2847eaf6-9546-4b3a-9bce-a71a0a9cda2b">
-
 
 ## RESULT
 
